@@ -25,7 +25,7 @@ signaldisplay bounds(122, 16, 260, 100) channel("sigDisplay")
         kenv madsr 0.01, gifreq, 0, 0
         asig noise p5, -.5 
         gafreq = 1/p4
-        vincr gasig, (asig * kenv)	
+        vincr gasig, (asig * kenv)
         endin
         
         instr 2
