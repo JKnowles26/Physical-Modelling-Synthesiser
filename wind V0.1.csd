@@ -1,4 +1,4 @@
-<Cabbage>
+<Cabbage> bounds(0, 0, 0, 0)
 form caption("main") size(400, 300), guiMode("queue"), pluginId("def1")
 keyboard bounds(8, 166, 381, 95)
 rslider bounds(36, 90, 60, 60) channel("filterSlider") range(0, 10000, 1500, 1, 100) text("String Resonance") popupText("String Resonance")
@@ -17,6 +17,13 @@ signaldisplay bounds(122, 24, 254, 93) channel("master") colour(255, 255, 255, 2
     
     gaSig init 0
     
+    opcode DelayLine a, a
+    endop
+    
+    opcode Exciter i, a
+    endop
+    
+    opcode
     alwayson 2
     ;instrument will be triggered by keyboard widget
     instr 1
@@ -30,7 +37,7 @@ signaldisplay bounds(122, 24, 254, 93) channel("master") colour(255, 255, 255, 2
     kCutoff chnget "filterSlider"
     aFiltered tone atap, kCutoff
     gaSig = aFiltered* 2
-    delayw asig + aFiltered * 0.995
+    delayw asig + aFiltered * 0.997
     
     outs aFiltered, aFiltered
     endin
