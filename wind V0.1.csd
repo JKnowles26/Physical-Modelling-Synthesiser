@@ -34,7 +34,7 @@ rslider bounds(180, 92, 60, 60) channel("feedback1") range(-3, 3, 1.23, 1, 0.01)
     alwayson 2
     ;instrument will be triggered by keyboard widget
     instr 1
-    asig noise p5, -0.9
+    asig noise 0.1, -0.9
     kenv madsr 0.65, 0.1, 0, 0
     kCutoff1 chnget "cutoff1"
     asig tone asig, kCutoff1
