@@ -12,30 +12,32 @@ ksmps = 32
 nchnls = 2
 0dbfs = 1
 
-gaExc init 0
-gaOut init 0
+gaSig init 0
+gkFreq init 0
 ;opcodes
 
 ;exciter 
 opcode excite, a, iiiiii
 iVel, iFilt, iAtt, iDec, iSus, iRel xin
 aNoise noise iVel, iFilt
-kEnv adsr iAtt, iDec, iSus, iRel
+kEnv madsr iAtt, iDec, iSus, iRel
 aOut = aNoise * kEnv
 xout aOut
 endop
 
 ;waveguide
-opcode waveguide, a, ai
-aIn, iFreq xin
-if iFreq >= 0 then
-    iFreq = 1
+opcode waveguide, a, ak
+aIn, kFreq xin
+
+if kFreq <= 0 then
+    kFreq = 1
 endif
+kFreq = 1 / kFreq
 aBuffout delayr 1
-afreq = 1 / iFreq
-atap deltapi afreq
+aSig deltapi kFreq
 delayw aIn
-xout atap
+
+xout aSig
 endop
 
 ;scattering junction
@@ -47,19 +49,25 @@ opcode filter, a, a
 endop
 
 alwayson 2
-;instrument will be triggered by keyboard widget
-instr 1
-gaExc excite p5, -0.9, 0.65, 1, 0, 5
 
-outs gaOut, gaOut
+instr 1
+//Excite inputs: Vel, Filt, Att, Dec, Sus, Rel
+aSig excite p5, -0.5, 0.1, 0.1, 1, 0.01
+gkFreq = p4
+gaSig = aSig
 endin
 
 instr 2
-aSigA = gaExc
-aSigB waveguide aSigA, p4
-aSigA waveguide aSigB, p4
-gaOut = aSigB
+
+aSig init 0
+aSig = gaSig + aSig
+aSig1 waveguide aSig, gkFreq 
+aSig1 = aSig1* 0.98
+aSig waveguide aSig1, gkFreq
+out aSig1
+gaSig = 0
 endin
+
 </CsInstruments>
 <CsScore>
 ;causes Csound to run for about 7000 years...
