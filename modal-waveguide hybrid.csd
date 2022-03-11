@@ -14,7 +14,8 @@ nchnls = 2
 
 gaSig init 0
 gkFreq init 0
-giFeedback = 0.5
+giFeedback = 0.99
+giScatterRate = 0.1
 ;opcodes
 
 ;exciter 
@@ -46,7 +47,8 @@ opcode scatterjunc, aa, aai
 aIn1, aIn2, iScatterRate xin
 aSig1 = (aIn1 * (1 - iScatterRate)) + (aIn2 * iScatterRate)
 aSig2 = (aIn2 * (1 - iScatterRate)) + (aIn1 * iScatterRate)
-
+aSig1 tone aSig1,5000
+aSig2 tone aSig2, 5000
 xout aSig1, aSig2
 
 endop
@@ -55,7 +57,7 @@ alwayson 2
 
 instr 1
 //Excite inputs: Vel, Filt, Att, Dec, Sus, Rel
-aSig excite p5, -0.5, 0.1, 0.1, 1, 0.01
+aSig excite p5, 0.9, 0.1, 0.1, 1, 0.01
 gkFreq = p4
 gaSig = aSig
 endin
@@ -63,16 +65,20 @@ endin
 instr 2
 
 aSig init 0
+aSig5 init 0
+aSig4 init 0
+
 aSig = gaSig + aSig
-aSig1 waveguide aSig, gkFreq 
-aSig1 tone aSig1, 5000
+aSig1 waveguide aSig, gkFreq
+aSig1, aSig5 scatterjunc aSig1, aSig5, giScatterRate
 aSig2 waveguide aSig1, gkFreq
-aSig2 tone aSig2, 5000
+aSig2, aSig4 scatterjunc aSig2, aSig4, giScatterRate
 aSig3 waveguide aSig2, gkFreq
-aSig3 tone aSig3, 5000
-aSig waveguide aSig3, gkFreq
-aSig2 = tanh(aSig2 * giFeedback)
-outs aSig2, aSig2
+aSig4 waveguide aSig3, gkFreq
+aSig5 waveguide aSig4, gkFreq
+aSig waveguide aSig5, gkFreq
+aSig = aSig * giFeedback
+outs aSig3, aSig3
 gaSig = 0
 endin
 
