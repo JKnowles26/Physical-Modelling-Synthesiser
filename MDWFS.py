@@ -1,8 +1,10 @@
 from pyo import *
 
-def exciter(adsr, noiseType='std'):
+SAMPLERATE = 44100
+
+def exciter(noiseType='std'):
     if noiseType == 'std':
-        n = Noise(adsr)
+        n = Noise(.1)
     if noiseType == 'brown':
         n = PinkNoise(.1)
     if noiseType == 'pink':
@@ -15,13 +17,28 @@ def waveguide(inp, freq):
 def scatterJunc():
     x = 0
 
-s = Server(winhost="asio").boot()
+s = Server(sr=SAMPLERATE, winhost="asio").boot()
 s.start()
 
 notes = Notein(poly=10, scale=0, first=0, last=127, channel=0, mul=1)  
 notes.keyboard()
+freqs = MToF(notes["pitch"])
 
-adsr = Adsr(0.01, 0.05, 0.707, 0.1, 2,0.5)
+exc = exciter()
+
+tab = NewTable(5000)
+
+def noteon(voice):
+    "Print pitch and velocity for noteon event."
+    pit = notes["pitch"].get(all=True)[voice]
+    pit = midiToHz(pit)
+    vel = int(notes["velocity"].get(all=True)[voice] * 127)
+    tableLen = (1 / pit) * SAMPLERATE
+    print(tableLen)
+    TableRec(exc, tab)
+    a = TableRead(tab).out()
+    print("Noteon: voice = %d, pitch = %f, velocity = %d" % (voice, pit, vel))
 
 
+tfon = TrigFunc(notes["trigon"], noteon, arg=list(range(10)))
 s.gui(locals())
