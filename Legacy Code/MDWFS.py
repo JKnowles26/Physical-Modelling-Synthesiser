@@ -9,15 +9,11 @@ def exciter(noiseType='white', mul=1, add=0):
         n = BrownNoise(mul, add)
     return n
 
-def getPitch(voice):
-    pitch = int(note["pitch"].get(all=True)[voice])
-    print(pitch)
-    return pitch
 SAMPLERATE = 44100
 BUFFERSIZE = 128
 
 #Set server settings and boot
-s = Server(sr=SAMPLERATE, buffersize=256, duplex=0)
+s = Server(sr=SAMPLERATE, buffersize=BUFFERSIZE, duplex=0)
 s.setMidiInputDevice(99)
 s.boot()
 s.start()
@@ -30,10 +26,10 @@ freqs = MToF(pit)
 amp = MidiAdsr(note["velocity"], attack=0.001, decay=0.1, sustain=0.7, release=0, mul=0.1,)
 
 exc = exciter(noiseType='white', mul=amp)
-
 d = Delay(exc, 1/freqs, 0)
-filt = exc + (0.99*d)
+filt = exc + d * 0.99
 d.setInput(filt)
+
 d.out()
 s.gui(locals())
 
