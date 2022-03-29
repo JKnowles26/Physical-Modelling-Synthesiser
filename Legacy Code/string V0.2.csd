@@ -26,6 +26,8 @@ signaldisplay bounds(122, 24, 254, 93) channel("master") colour(255, 255, 255, 2
     asig noise p5, -.9
     asig = asig * kenv
     afreq = 1/p4
+    kfreq = afreq
+    printk 1, kfreq
     aBuffOut delayr 1
     atap deltapi afreq
     kCutoff chnget "filterSlider"

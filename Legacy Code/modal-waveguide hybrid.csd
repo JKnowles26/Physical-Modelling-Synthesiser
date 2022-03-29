@@ -77,7 +77,7 @@ aSig3 waveguide aSig2, gkFreq
 aSig4 waveguide aSig3, gkFreq
 aSig5 waveguide aSig4, gkFreq
 aSig waveguide aSig5, gkFreq
-aSig = aSig * giFeedback
+aSig = tone(aSig, 1000) * giFeedback
 outs aSig3, aSig3
 gaSig = 0
 endin
