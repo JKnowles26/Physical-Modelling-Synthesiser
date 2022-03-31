@@ -10,22 +10,22 @@ kr     = 4800
 nchnls = 2
 0dbfs  = 1
           instr 1
-ifreq     =         p3
-iamp      =         p4
-iatt      =         p5
-isus      =         p6
-irel      =         p7
-inType    =         p8
-inFilt    =         p9
-ifilt     =         p10
-ifdbk     =         p11
-inGain    =         p12
-ifltr1Tog =         p13
-ifltr1Cut =         p14
-inlTog    =         p15
-inlType   =         p16
-ifltr2Tog =         p17
-ifltr2Cut =         p18
+ifreq     =         p4
+iamp      =         p5
+iatt      =         p6
+isus      =         p7
+irel      =         p8
+inType    =         p9
+inFilt    =         p10
+ifilt     =         p11
+ifdbk     =         p12
+inGain    =         p13
+ifltr1Tog =         p14
+ifltr1Cut =         p15
+inlTog    =         p16
+inlType   =         p17
+ifltr2Tog =         p18
+ifltr2Cut =         p19
 
 
 isec      =         1 / ifreq
@@ -65,8 +65,7 @@ endif
 
 <CsScore>
 ; 1 2 3   4    5   6 7 8 9   10   11    121314  151617
-i 1 0 440 0.05 0.1 0 0 0 0.3 5000 0.997 1 1 500 1 1 4000
-i 1 2 220 0.05 0.1 0 0 2 0.3 1500 0.997 1 0 150 0 1`4000
+i 1 0 20 440 0.05 0.1 0 0 0 0.3 5000 0.997 1 1 500 1 1 4000 
 e
 </CsScore>
 </CsoundSynthesizer>    
