@@ -76,7 +76,7 @@ def setParams(p):
   </CsInstruments>
   <CsScore>
   ; 1 2 3 4   5    6   7 8 9 10 11    12    131415  161718
-  i 1 0 12 220 '''
+  i 1 0 18 220 '''
   for parameter in p:
     csd += str(parameter) + " "
   csd += "\n"
@@ -157,40 +157,41 @@ p = initModel()
 csd = setParams(p)
 #Get training data
 dataDir = os.path.join(os.getcwd(), 'SoundFiles', 'Strings')
-wavFname = os.path.join(dataDir, 'bassDrumHit.wav')
+wavFname = os.path.join(dataDir, 'tromboneA3Piano.wav')
 trainData, sr = librosa.load(wavFname, sr=44100)
 trainLen = trainData.shape[0]
-trainMfccs = librosa.feature.mfcc(y=trainData, sr=sr, n_mfcc= 50)
+trainSpecs = librosa.feature.melspectrogram(y=trainData, sr=sr, hop_length=512)
 
 #Machine Learning Loop
-epochs = 50
+epochs = 150
 learningRate = 10
 
 prevDist = 100000
 losses = []
 newP = p
+cs = ctcsound.Csound()  
+
 
 for x in range(epochs):
   #CODE TO RENDER CSOUND FILE
   csd = setParams(newP)
-  cs = ctcsound.Csound()  
-  cs.createMessageBuffer(toStdOut=False)
   ret = cs.compileCsdText(csd)
+  cs.createMessageBuffer(toStdOut=False)
   test = []
   if ret == ctcsound.CSOUND_SUCCESS:
       cs.start()
       cs.perform()
-      #cs.reset()
+      cs.reset()
   print(x)
   #Get current Estimate
   currInst, sr = librosa.load('Render.wav', sr=44100)
   currInstTrim = currInst[0:trainLen]
 
   #Calculate Mfccs
-  learnMfccs = librosa.feature.mfcc(y=currInstTrim, sr=sr, n_mfcc= 50)
+  learnSpecs = librosa.feature.melspectrogram(y=currInstTrim, sr=sr, hop_length=512)
 
   #Calculate Euclidian distance (loss)
-  dist = np.linalg.norm(trainMfccs - learnMfccs)
+  dist = np.linalg.norm(trainSpecs - learnSpecs)
 
   #Adjust Parameters randomly
   print(dist, " ~ ", prevDist)
@@ -202,7 +203,7 @@ for x in range(epochs):
 
   newP = adjustParams(p, learningRate)
   losses.append(pLoss)
-  learningRate *= 0.95
+  learningRate *= 0.99
   print(learningRate)
 
 plt.plot(losses)
@@ -210,6 +211,10 @@ plt.show()
 print(p)
 csd = setParams(p)
 cs = ctcsound.Csound()  
+display.specshow(trainSpecs)
+plt.show()
+display.specshow(learnSpecs)
+plt.show()
 cs.createMessageBuffer(toStdOut=False)
 ret = cs.compileCsdText(csd)
 test = []
