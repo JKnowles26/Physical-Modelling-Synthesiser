@@ -26,15 +26,18 @@ ib1bw     =         p16
 ib2bw     =         p17
 ib3bw     =         p18
 ib4bw     =         p19
-idel1     =         p20
-idel2     =         p21
-idel3     =         p22
-igain1    =         p23
-igain2    =         p24
-igain3    =         p25
-igain4    =         p26
-if2Tog    =         p27
-if2Hz     =         p28
+ib5bw     =         p20
+idel1     =         p21
+idel2     =         p22
+idel3     =         p23
+idel4     =         p24
+igain1    =         p25
+igain2    =         p26
+igain3    =         p27
+igain4    =         p28
+igain5    =         p29
+if2Tog    =         p30
+if2Hz     =         p31
 
 afdbk init 0
 isec      =         1 / ifreq
@@ -65,6 +68,7 @@ ab1       butterbp    a2, ifreq, ib1bw
 ab2       butterbp    a2, ifreq*idel1, ib2bw
 ab3       butterbp    a2, ifreq*idel2, ib3bw
 ab4       butterbp    a2, ifreq*idel3, ib4bw
+ab5       butterbp    a2, ifreq*idel4, ib5bw
 
 agarb     delayr    1
 ad1       deltapi   isec
@@ -82,16 +86,21 @@ agarb     delayr    1
 ad4       deltapi   isec * (1/idel3)
           delayw    ab4 
 
+agarb     delayr    1
+ad5       deltapi   isec * (1/idel3)
+          delayw    ab5
+
 afdbk      =         ifdbk * (ad1 + ad2+ ad3+ad4)
 
 adg1       =         ad1 * igain1
 adg2       =         ad2 * igain2
 adg3       =         ad3 * igain3
 adg4       =         ad4 * igain4
+adg5       =         ad5 * igain5
 if (if2Tog == 1) then
-  aout     tone      (adg1 + adg2 + adg3 + adg4), if2Hz
+  aout     tone      (adg1 + adg2 + adg3 + adg4 + adg5), if2Hz
 else 
-  aout     =         adg1 + adg2 + adg3 + adg4
+  aout     =         adg1 + adg2 + adg3 + adg4 + adg5
 endif
 
           outs      aout, aout
@@ -99,8 +108,8 @@ endif
 </CsInstruments>
 
 <CsScore>
-; 1 2 3 4   5 6   7 8 9 10   11    12    131415   16  17   18   19   20   21   22   23   24  25   26  272829303132
-i 1 0 5 440 1 0.0001 0 0.4 0 -0.5 10000 0.55 1 0 2000 1000 1000 1000 1000 2.1 4.20 8.1 1 1 1 1 0 5000
+; 1 2 3 4   5 6      7 8   9 10   11    12   131415   16  17    18   19   20   21   22  23  24  25262728293031
+i 1 0 5 440 1 0.0001 0 0.4 0 -0.5 10000 0.9 1 0 2000 1000 1000 1000 1000 1000 2.1  3.2 4.1 4.9 1 1 1 1 1 0 5000
 e
 </CsScore>
 </CsoundSynthesizer>    
