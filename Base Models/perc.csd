@@ -1,5 +1,4 @@
 <CsoundSynthesizer>
-
 <CsOptions>
   -d -o dac -m0
 </CsOptions>
@@ -41,7 +40,7 @@ if2Hz     =         p31
 
 afdbk init 0
 isec      =         1 / ifreq
-asec      =         1 / ifreq
+asec      =         1 / ifreq 
 
 if (inType == 0) then
   a1      noise     iamp, inFilt
@@ -52,7 +51,6 @@ elseif (inType == 2) then
 endif
 
 kenv      madsr     iatt, isec, isus, irel 
-
 
 a1        =         a1 * inGain
 a1        =         a1 * kenv
@@ -87,11 +85,11 @@ ad4       deltapi   isec * (1/idel3)
           delayw    ab4 
 
 agarb     delayr    1
-ad5       deltapi   isec * (1/idel3)
+ad5       deltapi   isec * (1/idel4)
           delayw    ab5
 
-afdbk      =         ifdbk * (ad1 + ad2+ ad3+ad4)
-
+afdbk      =         ifdbk * (ad1 + ad2+ ad3+ad4+ad5)
+afdbk      tone      afdbk, ifilt
 adg1       =         ad1 * igain1
 adg2       =         ad2 * igain2
 adg3       =         ad3 * igain3
@@ -109,7 +107,7 @@ endif
 
 <CsScore>
 ; 1 2 3 4   5 6      7 8   9 10   11    12   131415   16  17    18   19   20   21   22  23  24  25262728293031
-i 1 0 5 440 1 0.0001 0 0.4 0 -0.5 10000 0.9 1 0 2000 1000 1000 1000 1000 1000 2.1  3.2 4.1 4.9 1 1 1 1 1 0 5000
+i 1 0 5 440 1 0.0001 0 0.4 0 -0.5 3000 0.9 1 0 2000 1000 1000 1000 1000 1000 2.1  3.2 4.1 5.9 1 1 1 1 1 0 5000
 e
 </CsScore>
 </CsoundSynthesizer>    

@@ -22,7 +22,7 @@ signaldisplay bounds(122, 24, 254, 93) channel("master") colour(255, 255, 255, 2
     
     instr 1
     ifreq=1/p4
-    kenv madsr 0.0000001, ifreq, 0, 1
+    kenv madsr 0.0000001, ifreq, 0, 5
     asig noise p5, -.9
     asig = asig * kenv
     afreq = 1/p4

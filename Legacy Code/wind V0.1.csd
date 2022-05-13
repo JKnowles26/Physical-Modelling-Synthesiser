@@ -19,39 +19,39 @@ rslider bounds(180, 92, 60, 60) channel("feedback1") range(-3, 3, 1.23, 1, 0.01)
     
     gaSig init 0
     
-    opcode delayMod, aa, aai
+                opcode      delayMod, aa, aai
     aSigA, aSigB, ifreq xin
-    afreq=1/ifreq
-    kCutoff chnget "filterSlider"
-    aBuffOut delayr 1
-    atap deltapi afreq
-    aFiltered tone atap, kCutoff
-    gaSig = aFiltered* 2
-    delayw aSigA + aSigB + aFiltered * 0.995
-    xout aFiltered, aFiltered
+    afreq   =               1/ifreq
+    kCutoff     chnget      "filterSlider"
+    aBuffOut    delayr      1
+    atap        deltapi     afreq
+    aFiltered   tone        atap, kCutoff
+    gaSig       =           aFiltered* 2
+                delayw      aSigA + aSigB + aFiltered * 0.995
+                xout        aFiltered, aFiltered
     endop
     
     alwayson 2
     ;instrument will be triggered by keyboard widget
     instr 1
-    asig noise 0.1, -0.9
-    kenv madsr 0.65, 0.1, 0, 0
-    kCutoff1 chnget "cutoff1"
-    asig tone asig, kCutoff1
-    aBuffOut delayr 1
-    afreq = 1 / p4
-    atap deltapi afreq
-    kCutoff2 chnget "cutoff2"
-    afiltered tone atap, kCutoff2
-    kFeedback chnget "feedback1"
-    printk 1, kFeedback 
-    delayw asig + tanh(afiltered * kFeedback)
-    gaSig = afiltered
-    out afiltered
+    asig        noise       0.1, -0.9
+    kenv        madsr       0.65, 0.1, 0, 0
+    kCutoff1    chnget      "cutoff1"
+    asig        tone        asig, kCutoff1
+    aBuffOut    delayr      1
+    afreq       =           1 / p4
+    atap        deltapi     afreq
+    kCutoff2    chnget      "cutoff2"
+    afiltered   tone        atap, kCutoff2
+    kFeedback   chnget      "feedback1"
+                printk      1, kFeedback 
+                delayw asig + tanh(afiltered * kFeedback)
+    gaSig       =           afiltered
+                out         afiltered
     endin
     
     instr 2 
-    display gaSig, .001, 300
+                display     gaSig, .001, 300
     endin
     </CsInstruments>
 <CsScore>
